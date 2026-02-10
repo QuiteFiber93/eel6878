@@ -1,0 +1,165 @@
+\documentclass[11pt]{exam}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\usepackage[centertags]{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[all]{xy}
+\usepackage{newlfont}
+\usepackage{bm,mathtools}
+
+\usepackage{xcolor}
+\usepackage{xmpmulti}
+\usepackage{thumbpdf}
+\usepackage{wasysym}
+\usepackage{upgreek}
+\usepackage{ucs}
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{verbatim}
+\usepackage{empheq}
+\newcommand*\widefbox[1]{\fbox{\hspace{2em}#1\hspace{2em}}}
+
+\newcommand{\Integer}{\mathbb{Z}}
+\newcommand{\Natural}{\mathbb{Z}_{\geq 0}}
+\newcommand{\Naturalstar}{\mathbb{Z}_{> 0}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\hilbert}{\mathcal{H}}
+\newcommand{\BigHilbert}{\bm{\mathcal{H}}}
+\newcommand{\innprod}[2]{\langle{#1},{#2}\rangle}
+\newcommand{\ginnprod}[2]{\langle\!\langle{#1},{#2}\rangle\!\rangle}
+\newcommand{\norm}[1]{\|{#1}\|}
+\newcommand{\mrm}[1]{{\mathrm #1}}
+\newcommand{\gnorm}[1]{|\!|\!|{#1}|\!|\!|}
+\newcommand{\expect}{\mathbb{E}}
+
+\graphicspath{{./media/}}
+
+\begin{document}
+\centerline{\Large \sc EEL 6878 Modeling and Artificial Intelligence (2026 Sp)}
+\centerline{\Large \sc Homework Assignment}
+\pagestyle{empty}
+
+\hrulefill
+
+\vspace{2cm}
+
+{\Large \sc Name:}
+
+\vspace{2cm}
+
+{\Large \sc Student ID:}
+
+\vspace{6cm}
+
+\begin{itemize}
+  \item Reasoning and work must be shown to gain partial/full credit
+  \item Please include the cover-page on your homework PDF with your name and student ID. Failure of doing so is considered bad citizenship.
+  \item The packages that you may need include \texttt{networkx}, \texttt{matplotlib}, and \texttt{numpy}.
+\end{itemize}
+
+\clearpage
+
+\begin{questions}
+
+\question[5]{\bf Network Model Classification}
+
+Indicate what kind of network model among the following:
+\begin{enumerate}
+\item Undirected, unweighted
+\item Undirected, weighted
+\item Directed, unweighted
+\item Directed, weighted
+\item Directed, labeled
+\end{enumerate}
+you think would be useful to study the following systems:
+\begin{parts}
+\part An ontology
+\part Twitter retweet network
+\part The Internet
+\part The electric grid
+\end{parts}
+
+\question[10]{\bf Netflix Bipartite Network Analysis}
+
+Netflix keeps data on customer preferences using a big bipartite network connecting users to titles they have watched and/or rated. Assume Netflix's movie library contains approximately 100,000 titles if you count streaming and DVD-by-mail.
+
+In the fourth quarter of 2013, Netflix reported having a set of 33 million users. Assume the average user's degree in this network is 1000.
+
+\begin{parts}
+\part Approximately how many links are in this network? 
+\part Would you consider this network sparse or dense? Explain.
+\end{parts}
+
+\question[10]{\bf Adjacency Matrix and Incidence Matrix}
+
+\begin{parts}
+\part Consider a directed graph with no cycles or self-loops: explain why for any $k>0$ the matrix $\bm A^k$ has its diagonal equal to zero.  
+\part For an undirected graph with no self-loop: Why is the diagonal of $\bm A^2$ equal to the degree sequence?
+\part Suppose you have a tree with 20 nodes. What is the dimension of its incidence matrix $\bm B$?
+\end{parts}
+
+\question[30]{\bf IEEE Bus Systems Analysis}~{\it Python/NetworkX question}
+
+Please find two edgelists for the IEEE 30 bus and the IEEE 123 bus systems. Finish the following questions using Python/NetworkX.
+
+\begin{parts}
+\part Plot the 30-node graph and find the density and the maximal degree of the graph.
+\part Plot the 123-node graph and find the density and the maximal degree of such a graph.
+\part Are the graphs connected?
+\part Do these graphs have cycles? If yes, please give an example.
+\part Find a cut of the 30-node system and see if there is a bridge in such a graph.
+\part Verify the \textit{Handshaking Theorem} for both graphs.
+\part Use the function in NetworkX called \href{https://networkx.org/documentation/stable/reference/algorithms/shortest_paths.html}{\tt shortest\_path}. Find the shortest path from node ``1'' to node ``30'' of the 30-node system and plot this path with another color in the graph.
+\end{parts}
+
+\question[35]{\bf Max-Flow: Road Trip Settlement}~{\it Python/NetworkX question}
+
+Consider a group of $N$ friends, indexed by $i \in [0, 1, \ldots, N-1]$, on a road trip. Suppose that each person paid for various group expenditures throughout the course of the trip.
+Some of the friends spent more than their share of the total (denoted by $T$), and naturally, some paid less than their share. At the end of the trip, those who are in the deficit need to settle the balance with the others, so that each of them pay exactly $T/N$. 
+
+\begin{parts}
+\part Choose $N = 10$ and set the total expenditure over the course of the trip to $T = 1000\cdot N$.
+\part Generate a vector of individual expenditures according to a multinomial distribution with $N$ using the following script:\\
+\texttt{amounts\_spent = numpy.random.multinomial(T, pvals = np.ones(N) / N)}\\
+Verify that the sum of all the elements in the \texttt{amounts\_spent} array is $T$.
+\part Generate a complete graph among the friends with edge capacity set to $\infty$ for all edges.
+\part Identify the nodes that (1) need to pay (i.e., $T/N - \mathrm{amounts\_spent}[i] > 0$) and (2) those that need to receive money (i.e., $T/N - \mathrm{amounts\_spent}[i] \leq 0$) to balance the books.
+\part Build the following flow network:
+\begin{enumerate}
+    \item Introduce a source node $s$ and connect it to the nodes in the former set with edge capacity equal to their individual balance (equal to $T/N - \mathrm{amounts\_spent}[i]$).
+    \item Introduce a target node $t$ and connect each node in the latter group to $t$ with edge capacity equal to their individual balance (equal to $\mathrm{amounts\_spent}[i] - T/N$). 
+\end{enumerate}
+Plot the flow network. You can use the \texttt{flow\_layout} method in the attached script file to get a flow layout for this graph.
+\part If you run the Max-Flow algorithm, it can be shown that each flow represents the set of transactions that need to take place to balance the books. Use the max-flow algorithm to find the transactions required to settle up the balances, and verify whether the books were balanced using the flow.\\
+\textit{Useful methods}: \texttt{networkx.maximum\_flow}.\\
+\textit{Useful methods}: Use \texttt{draw\_flow} from the attached script file to draw the flow network with the flows highlighted.
+\end{parts}
+
+\question[10]{\bf Norms}
+
+For a vector \( x \in \mathbb{R}^d \), the \( L_p \) norm is defined as:
+\[
+\|x\|_p = (|x_1|^p + |x_2|^p + \dots + |x_d|^p)^{1/p}
+\]
+We will be frequently making use of \( p = 1, 2, \infty \) norms.
+
+\begin{parts}
+\part Give a simple formula for the \( L_\infty \) norm, which is defined as \( \|x\|_\infty = \lim_{p \to \infty} \|x\|_p \).
+\part Verify that \( \|x\|_\infty \) is a norm on vector space, i.e., for vectors \( a \) and \( b \) and scalar \( c \), it satisfies the following three properties: \( \|a + b\|_\infty \leq \|a\|_\infty + \|b\|_\infty \); \( \|ca\|_\infty = |c|\|a\|_\infty \); if \( \|a\|_\infty = 0 \) then \( a \) is the all 0's vector.
+\part Show that:
+\[
+\|x\|_\infty \leq \|x\|_2 \leq \|x\|_1
+\]
+\part Verify the following special case of Holder's inequality for vectors \( a \) and \( b \):
+\[
+a \cdot b \leq \|a\|_1 \|b\|_\infty
+\]
+\end{parts}
+
+\end{questions}
+
+\end{document}
