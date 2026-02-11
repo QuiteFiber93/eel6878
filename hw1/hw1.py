@@ -1,19 +1,18 @@
 import numpy as np
-import networkx as nx
 import matplotlib.pyplot as plt
 
-
+import networkx as nx
 if __name__ == "__main__":
     print('-----------------------------------------------------')
     print('Problem 4')
     print("\n=====================================")
     print("     Part (a): Plotting IEEE30       ")
     print("=====================================")
-    ax1 = plt.subplot(111)
+    fig = plt.figure(figsize=  (12, 10))
     graph30 = nx.read_edgelist("HW1_2026/ieee30.edgelist")
-    positions30 = nx.spectral_layout(graph30)
-    nx.draw(graph30, positions30,with_labels=True)
-    plt.show()
+    positions30 = nx.spring_layout(graph30, k = 0.3, seed = 2026, iterations = 50)
+    nx.draw(graph30, positions30, with_labels=True)
+    plt.savefig("ieee30_graph.png")
 
     degree_sequence = [d for n,d in graph30.degree]
     max_degree = max(degree_sequence)
@@ -23,11 +22,11 @@ if __name__ == "__main__":
     print("\n=====================================")
     print("     Part (b): Plotting IEEE123      ")
     print("=====================================")
-    ax1 = plt.subplot(111)
+    fig = plt.figure(figsize=(12, 10))
     graph123 = nx.read_weighted_edgelist("HW1_2026/ieee123.edgelist")
-    positions123 = nx.spring_layout(graph123)
-    nx.draw(graph123, positions123, with_labels=True)
-    plt.show()
+    positions123 = nx.nx_agraph.graphviz_layout(graph123, prog="dot")
+    nx.draw(graph123, positions123, with_labels=True, font_size=10, font_weight="bold")
+    plt.savefig('ieee123_graph.png')
 
     degree_sequence = [d for n,d in graph123.degree]
     max_degree = max(degree_sequence)
@@ -56,10 +55,10 @@ if __name__ == "__main__":
 
     cycle_path = nx.find_cycle(graph30)
     print(f'IEEE30 Cycle Example:\t{cycle_path}')
-    fig = plt.figure()
-    nx.draw(graph30, positions30,with_labels=True)
+    fig = plt.figure(figsize=  (12, 10))
+    nx.draw(graph30, positions30, with_labels=True)
     nx.draw_networkx_edges(graph30, positions30, edgelist=cycle_path, edge_color = 'red')
-    plt.show()
+    plt.savefig('ieee30_cycle.png')
         
         
     try:
@@ -89,5 +88,13 @@ if __name__ == "__main__":
     print("\n=====================================")
     print("     Part (g): Shortest Path         ")
     print("=====================================")
-    shortest_path = nx.shortest_path(graph30, '1', '30')
-    print(shortest_path)
+    initial_node = '1'
+    terminal_node = '30'
+    shortest_path = nx.shortest_path(graph30, initial_node, terminal_node)
+    shortest_path_edges =  [(shortest_path[i], shortest_path[i+1]) for i in range(len(shortest_path) - 1)]
+    
+    print(f" The shortest path from {initial_node} to {terminal_node} is {shortest_path}")
+    fig = plt.figure(figsize=  (12, 10))
+    nx.draw(graph30, positions30, with_labels = True)
+    nx.draw_networkx_edges(graph30, positions30, edgelist =shortest_path_edges, edge_color='red')
+    plt.savefig('ieee30_shortest_path.png')
