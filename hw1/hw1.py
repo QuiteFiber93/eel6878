@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from HW1_2026.utils import flow_layout, draw_flow
+
 import networkx as nx
 if __name__ == "__main__":
     print('-----------------------------------------------------')
@@ -13,7 +15,8 @@ if __name__ == "__main__":
     positions30 = nx.spring_layout(graph30, k = 0.3, seed = 2026, iterations = 50)
     nx.draw(graph30, positions30, with_labels=True)
     plt.savefig("ieee30_graph.png")
-
+    plt.close()
+    
     degree_sequence = [d for n,d in graph30.degree]
     max_degree = max(degree_sequence)
     print(f"Maximum degree: {max(degree_sequence)} at node(s): {[n+1 for n,d in enumerate(degree_sequence) if d == max_degree]}")
@@ -27,7 +30,8 @@ if __name__ == "__main__":
     positions123 = nx.nx_agraph.graphviz_layout(graph123, prog="dot")
     nx.draw(graph123, positions123, with_labels=True, font_size=10, font_weight="bold")
     plt.savefig('ieee123_graph.png')
-
+    plt.close()
+    
     degree_sequence = [d for n,d in graph123.degree]
     max_degree = max(degree_sequence)
     print(f"Maximum degree: {max(degree_sequence)} at node(s): {[n+1 for n,d in enumerate(degree_sequence) if d == max_degree]}")
@@ -59,7 +63,7 @@ if __name__ == "__main__":
     nx.draw(graph30, positions30, with_labels=True)
     nx.draw_networkx_edges(graph30, positions30, edgelist=cycle_path, edge_color = 'red')
     plt.savefig('ieee30_cycle.png')
-        
+    plt.close()    
         
     try:
         print(f'IEEE123 Cycle Example:\t{nx.find_cycle(graph123)}')
@@ -98,3 +102,39 @@ if __name__ == "__main__":
     nx.draw(graph30, positions30, with_labels = True)
     nx.draw_networkx_edges(graph30, positions30, edgelist =shortest_path_edges, edge_color='red')
     plt.savefig('ieee30_shortest_path.png')
+    
+    plt.close()
+    print('-----------------------------------------------------')
+    print('Problem 5')
+
+    N = 10
+    T = 1000* N
+    
+    rng = np.random.default_rng(seed = 2026)
+    amounts_spent = rng.multinomial(T, pvals = np.ones(N) / N)
+    
+    assert sum(amounts_spent) == T, "Total of amounts spent must equal T"
+    
+    # Generating complete graph
+    G = nx.complete_graph(N, nx.DiGraph())
+    nx.set_edge_attributes(G, np.inf, 'Capacity')
+    
+    underpaid = np.where(amounts_spent < T/N)[0] + 1
+    overpaid = np.where(amounts_spent > T/N)[0] + 1
+    
+    # Setting up flow network 
+    G.add_node('s')
+    G.add_node('t')
+    
+    for i in range(1, N+1):
+        if i in underpaid:
+            G.add_edge('s', i, capacity = abs(T/N - amounts_spent[i-1]))
+        elif i in overpaid:
+            G.add_edge(i, 't', capacity = abs(T/N - amounts_spent[i-1]))
+        else:
+            pass
+        
+    pos = flow_layout(G, 's', 't')
+    fig = plt.figure(figsize = (12, 10))
+    nx.draw(G, pos, with_labels=True)
+    plt.show()
