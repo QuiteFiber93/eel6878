@@ -28,7 +28,7 @@ if __name__ == "__main__":
     fig = plt.figure(figsize=(12, 10))
     graph123 = nx.read_weighted_edgelist("HW1_2026/ieee123.edgelist")
     positions123 = nx.nx_agraph.graphviz_layout(graph123, prog="dot")
-    nx.draw(graph123, positions123, with_labels=True, font_size=10, font_weight="bold")
+    nx.draw(graph123, positions123, with_labels=True, font_size=15)
     plt.savefig('ieee123_graph.png')
     plt.close()
     
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     print(f'IEEE30 Cycle Example:\t{cycle_path}')
     fig = plt.figure(figsize=  (12, 10))
     nx.draw(graph30, positions30, with_labels=True)
-    nx.draw_networkx_edges(graph30, positions30, edgelist=cycle_path, edge_color = 'red')
+    nx.draw_networkx_edges(graph30, positions30, edgelist=cycle_path, edge_color = 'green', width=10)
     plt.savefig('ieee30_cycle.png')
     plt.close()    
         
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     print(f" The shortest path from {initial_node} to {terminal_node} is {shortest_path}")
     fig = plt.figure(figsize=  (12, 10))
     nx.draw(graph30, positions30, with_labels = True)
-    nx.draw_networkx_edges(graph30, positions30, edgelist =shortest_path_edges, edge_color='red')
+    nx.draw_networkx_edges(graph30, positions30, edgelist =shortest_path_edges, edge_color='green', width = 10)
     plt.savefig('ieee30_shortest_path.png')
     
     plt.close()
@@ -137,4 +137,4 @@ if __name__ == "__main__":
     pos = flow_layout(G, 's', 't')
     fig = plt.figure(figsize = (12, 10))
     nx.draw(G, pos, with_labels=True)
-    plt.show()
+    # plt.show()
