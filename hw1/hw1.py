@@ -137,7 +137,9 @@ if __name__ == "__main__":
     pos = flow_layout(G, 's', 't')
     fig = plt.figure(figsize = (12, 10))
     nx.draw(G, pos, with_labels=True)
-    plt.show()
+    plt.savefig('flow_network.png')
+    plt.close()
     
     max_flow = nx.maximum_flow(G, 's', 't')
     draw_flow(G, max_flow[1], dict(figsize = (12, 10)))
+    plt.savefig('flow_network_solution.png')

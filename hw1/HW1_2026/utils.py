@@ -78,4 +78,4 @@ def draw_flow(graph: nx.DiGraph, flowDict: dict = None, fig_kwargs: dict = {}, n
     nx.draw_networkx_edges(H, pos, edge_color="red")
     nx.draw_networkx_edge_labels(
         H, pos, edge_labels=nx.get_edge_attributes(H, "weight"), **nx_kwargs)
-    plt.show()
+    # plt.show()
