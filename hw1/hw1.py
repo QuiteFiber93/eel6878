@@ -74,8 +74,14 @@ if __name__ == "__main__":
     print("     Part (e): Graph Bridges         ")
     print("=====================================")
     
-    bridges = nx.bridges(graph30)
     cut_edges = nx.minimum_edge_cut(graph30)
+    bridges = nx.bridges(graph30)
+    fig = plt.figure(figsize = (12, 10))
+    nx.draw(graph30, positions30, with_labels=True)
+    nx.draw_networkx_edges(graph30, positions30, edgelist=list(bridges), edge_color = 'green', width=10)
+    plt.savefig('ieee30_cuts.png')
+    plt.close()
+    
     print(f'IEEE30 Cut Example:\t{list(cut_edges)}')
     print(f'IEEE30 Bridge Example:\t{list(bridges)}')
 
