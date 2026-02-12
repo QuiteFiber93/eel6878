@@ -119,22 +119,25 @@ if __name__ == "__main__":
     G = nx.complete_graph(N, nx.DiGraph())
     nx.set_edge_attributes(G, np.inf, 'Capacity')
     
-    underpaid = np.where(amounts_spent < T/N)[0] + 1
-    overpaid = np.where(amounts_spent > T/N)[0] + 1
-    
+    underpaid = np.where(amounts_spent < T/N)[0]
+    overpaid = np.where(amounts_spent >= T/N)[0]
+
     # Setting up flow network 
     G.add_node('s')
     G.add_node('t')
     
-    for i in range(1, N+1):
+    for i in range(N):
         if i in underpaid:
-            G.add_edge('s', i, capacity = abs(T/N - amounts_spent[i-1]))
+            G.add_edge('s', i, capacity = abs(T/N - amounts_spent[i]))
         elif i in overpaid:
-            G.add_edge(i, 't', capacity = abs(T/N - amounts_spent[i-1]))
+            G.add_edge(i, 't', capacity = abs(T/N - amounts_spent[i]))
         else:
             pass
         
     pos = flow_layout(G, 's', 't')
     fig = plt.figure(figsize = (12, 10))
     nx.draw(G, pos, with_labels=True)
-    # plt.show()
+    plt.show()
+    
+    max_flow = nx.maximum_flow(G, 's', 't')
+    draw_flow(G, max_flow[1], dict(figsize = (12, 10)))
