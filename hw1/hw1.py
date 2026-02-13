@@ -1,11 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HW1_2026.utils import flow_layout, draw_flow
+from utils_altered import flow_layout, draw_flow
+
+def draw_graph(graph, positions):
+    # drawing nodes
+    nx.draw_networkx_nodes(graph, positions, node_size = 800, node_color = 'royalblue', edgecolors = 'gray', linewidths=1.5)
+    # drawing node labels
+    nx.draw_networkx_labels(graph, positions, font_size = 12, font_color = 'white', font_weight = 'bold')
+    # drawing edges
+    nx.draw_networkx_edges(graph, positions, edge_color = 'gray', width = 1.2)
+    
+    plt.tight_layout()
+    plt.axis('off')
 
 import networkx as nx
 if __name__ == "__main__":
-    print('-----------------------------------------------------')
+    print('-----------------------------------------------------') 
     print('Problem 4')
     print("\n=====================================")
     print("     Part (a): Plotting IEEE30       ")
@@ -13,10 +24,13 @@ if __name__ == "__main__":
     fig = plt.figure(figsize=  (12, 10))
     graph30 = nx.read_edgelist("HW1_2026/ieee30.edgelist")
     positions30 = nx.spring_layout(graph30, k = 0.3, seed = 2026, iterations = 50)
-    nx.draw(graph30, positions30, with_labels=True)
+    
+    draw_graph(graph30, positions30)
+    
     plt.savefig("ieee30_graph.png")
     plt.close()
     
+    # Finding degree and density of plot
     degree_sequence = [d for n,d in graph30.degree]
     max_degree = max(degree_sequence)
     print(f"Maximum degree: {max(degree_sequence)} at node(s): {[n+1 for n,d in enumerate(degree_sequence) if d == max_degree]}")
@@ -28,7 +42,9 @@ if __name__ == "__main__":
     fig = plt.figure(figsize=(12, 10))
     graph123 = nx.read_weighted_edgelist("HW1_2026/ieee123.edgelist")
     positions123 = nx.nx_agraph.graphviz_layout(graph123, prog="dot")
-    nx.draw(graph123, positions123, with_labels=True, font_size=15)
+    
+    draw_graph(graph123, positions123)
+    
     plt.savefig('ieee123_graph.png')
     plt.close()
     
@@ -60,8 +76,11 @@ if __name__ == "__main__":
     cycle_path = nx.find_cycle(graph30)
     print(f'IEEE30 Cycle Example:\t{cycle_path}')
     fig = plt.figure(figsize=  (12, 10))
-    nx.draw(graph30, positions30, with_labels=True)
-    nx.draw_networkx_edges(graph30, positions30, edgelist=cycle_path, edge_color = 'green', width=10)
+    draw_graph(graph30, positions30)
+    
+    # drawing nodes and edges in path
+    nx.draw_networkx_nodes(graph30, positions30, nodelist=[u for u,v in cycle_path], edgecolors='green', node_size=800, linewidths=3)
+    nx.draw_networkx_edges(graph30, positions30, edgelist=cycle_path, edge_color = 'green', width=5)
     plt.savefig('ieee30_cycle.png')
     plt.close()    
         
@@ -75,15 +94,15 @@ if __name__ == "__main__":
     print("=====================================")
     
     cut_edges = nx.minimum_edge_cut(graph30)
-    bridges = nx.bridges(graph30)
+    bridges = list(nx.bridges(graph30))
     fig = plt.figure(figsize = (12, 10))
-    nx.draw(graph30, positions30, with_labels=True)
-    nx.draw_networkx_edges(graph30, positions30, edgelist=list(bridges), edge_color = 'green', width=10)
+    draw_graph(graph30, positions30)  
+    nx.draw_networkx_edges(graph30, positions30, edgelist=bridges, edge_color = 'red', width=5)
     plt.savefig('ieee30_cuts.png')
     plt.close()
     
     print(f'IEEE30 Cut Example:\t{list(cut_edges)}')
-    print(f'IEEE30 Bridge Example:\t{list(bridges)}')
+    print(f'IEEE30 Bridge Example:\t{bridges}')
 
     print("\n=====================================")
     print("     Part (f): Handshaking Theorem   ")
@@ -105,8 +124,8 @@ if __name__ == "__main__":
     
     print(f" The shortest path from {initial_node} to {terminal_node} is {shortest_path}")
     fig = plt.figure(figsize=  (12, 10))
-    nx.draw(graph30, positions30, with_labels = True)
-    nx.draw_networkx_edges(graph30, positions30, edgelist =shortest_path_edges, edge_color='green', width = 10)
+    draw_graph(graph30, positions30)
+    nx.draw_networkx_edges(graph30, positions30, edgelist =shortest_path_edges, edge_color='green', width = 5)
     plt.savefig('ieee30_shortest_path.png')
     
     plt.close()
@@ -142,10 +161,12 @@ if __name__ == "__main__":
         
     pos = flow_layout(G, 's', 't')
     fig = plt.figure(figsize = (12, 10))
-    nx.draw(G, pos, with_labels=True)
+    draw_graph(G, pos)
     plt.savefig('flow_network.png')
     plt.close()
     
     max_flow = nx.maximum_flow(G, 's', 't')
-    draw_flow(G, max_flow[1], dict(figsize = (12, 10)))
+    draw_flow(G, max_flow[1], dict(figsize = (12, 10)), dict(font_size = 20))
+    plt.axis('off')
+    plt.tight_layout()
     plt.savefig('flow_network_solution.png')
