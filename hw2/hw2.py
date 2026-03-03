@@ -3,6 +3,59 @@ from os import listdir
 import networkx as nx
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+
+# Problem 2
+
+# Function to create edgelist for graph with circular symmetry
+def create_circular_edgelist(N, I):
+    edge_list = []
+    for u in range(N):
+        for v in range(N):
+            for i in I:
+                if v == (u + i) % N: edge_list.append((u, v))
+    return edge_list
+
+# Actually creating graph for specified conditions
+N = 5
+I = [1]
+G = nx.Graph(create_circular_edgelist(N, I))
+
+fig = plt.figure()
+plt.title(f'Circular Graph for N = {N}')
+pos = nx.circular_layout(G)
+nx.draw_circular(G)
+nx.draw_networkx_labels(G, pos)
+plt.show()
+
+# Numerically calculating laplacian eigenvalues
+laplacian_eig = nx.laplacian_spectrum(G)
+print(f"Analytic Result: {None}")
+print(f"Numerical Result: {laplacian_eig}")
+
+
+# Looping through N for Fielder eigenvalue
+start = 5
+stop = 50
+step = 5
+N = np.arange(start, stop+step, step)
+
+fielder_values = [nx.laplacian_spectrum(nx.Graph(create_circular_edgelist(n, I)))[1] for n in N]
+
+fig = plt.figure()
+plt.plot(N, fielder_values, '-o')
+plt.title('Fielder Eigenvalues from 5 to 50')
+plt.grid()
+plt.show()
+
+# N = 10
+N = 10
+G = nx.Graph(create_circular_edgelist(N, I))
+
+fielder_eigenvalues = [None for n in range(1, N)]
+
+for n in range(1, N):
+    
 
 # Problem 3
 karate_graph = nx.karate_club_graph()
