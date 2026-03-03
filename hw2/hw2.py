@@ -30,7 +30,7 @@ plt.show()
 
 # Numerically calculating laplacian eigenvalues
 laplacian_eig = nx.laplacian_spectrum(G)
-print(f"Analytic Result: {None}")
+print(f"Analytic Result: {[2*(1 - np.cos(2*np.pi*k/N)) for k in range(N)]}")
 print(f"Numerical Result: {laplacian_eig}")
 
 
@@ -40,7 +40,7 @@ stop = 50
 step = 5
 N = np.arange(start, stop+step, step)
 
-fielder_values = [nx.laplacian_spectrum(nx.Graph(create_circular_edgelist(n, I)))[1] for n in N]
+fielder_values = [nx.algebraic_connectivity(nx.Graph(create_circular_edgelist(n, I))) for n in N]
 
 fig = plt.figure()
 plt.plot(N, fielder_values, '-o')
@@ -54,8 +54,29 @@ G = nx.Graph(create_circular_edgelist(N, I))
 
 fielder_eigenvalues = [None for n in range(1, N)]
 
-for n in range(1, N):
+for n in range(N-1):
+    # Node to be connected
+    u = n + 1
+    # Checking to see if the edge already exists
+    # If the edge exists, connectivity will not change, so fielder eigenvalue remains unchanged
+    if G.has_edge(0, u):
+        fielder_eigenvalues[n] = nx.algebraic_connectivity(G)
     
+    # If the edge does not already exist, create it, analyze, and delete it
+    else:
+        G.add_edge(0, u)
+        fielder_eigenvalues[n] = nx.algebraic_connectivity(G)
+        G.remove_edge(0, u)
+        
+# Plotting results        
+fig = plt.figure()
+plt.plot(range(1, N), fielder_eigenvalues, '-o')
+plt.title('Fielder Eigenvalues After Connecting Nodes 0 and k')
+plt.xlabel('k')
+plt.ylabel('Fielder Eigenvalue')
+plt.grid()
+plt.autoscale(False, axis = 'y')
+plt.show()
 
 # Problem 3
 karate_graph = nx.karate_club_graph()
