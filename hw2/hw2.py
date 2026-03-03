@@ -13,6 +13,7 @@ graph_names = ["All Books"] + [f"Book {n}" for n in range(1,8)]
 
 # Creating dict to store graphs in
 book_graphs = {name : None for name in graph_names}
+
 for name,data in zip(graph_names,graph_data):
     # Will use nx function to convert from pandas DF to edgelist
     # First reading csv to pandas dataframe
@@ -22,7 +23,10 @@ for name,data in zip(graph_names,graph_data):
     book_graphs[name] = nx.from_pandas_edgelist(book_graph_data, 'source', 'target', 'weight')
     
     # Showing graph statistics
-    print(book_graphs[name].number_of_nodes())
+    
+    print(f"{name} Node Count: {book_graphs[name].number_of_nodes()}")
+    print(f"{name} Edge Count: {book_graphs[name].number_of_edges()}")
+    print(f"{name} Avg Degree: ")
     
     # Plots graph
     fig = plt.figure()
@@ -30,4 +34,4 @@ for name,data in zip(graph_names,graph_data):
     plt.title(name)
     plt.axes()
     plt.show()
-    
+    plt.close()
