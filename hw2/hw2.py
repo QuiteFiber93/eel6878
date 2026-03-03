@@ -21,9 +21,13 @@ for name,data in zip(graph_names,graph_data):
     # Now converting pandas dataframe to graph through edgelist
     book_graphs[name] = nx.from_pandas_edgelist(book_graph_data, 'source', 'target', 'weight')
     
+    # Showing graph statistics
+    print(book_graphs[name].number_of_nodes())
+    
     # Plots graph
     fig = plt.figure()
     nx.draw_networkx(book_graphs[name])
     plt.title(name)
     plt.axes()
     plt.show()
+    
