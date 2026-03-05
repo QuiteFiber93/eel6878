@@ -4,9 +4,11 @@ import networkx as nx
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.cluster import KMeans
 
 # Problem 2
-
+print("\nProblem 2")
+print("====================================================")
 # Function to create edgelist for graph with circular symmetry
 def create_circular_edgelist(N, I):
     edge_list = []
@@ -28,10 +30,13 @@ nx.draw_circular(G)
 nx.draw_networkx_labels(G, pos)
 plt.show()
 
+# Using analytic expression prodivded in lecture
+analytic_predictions = np.array([2*(1 - np.cos(2*np.pi*k/N)) for k in range(N)])
 # Numerically calculating laplacian eigenvalues
 laplacian_eig = nx.laplacian_spectrum(G)
-print(f"Analytic Result: {[2*(1 - np.cos(2*np.pi*k/N)) for k in range(N)]}")
-print(f"Numerical Result: {laplacian_eig}")
+
+print(f"Analytic Predictions:   {np.array2string(np.sort(analytic_predictions), precision=5)}")
+print(f"Numerical Calculations: {np.array2string(laplacian_eig, precision=5, suppress_small=True)}")
 
 
 # Looping through N for Fielder eigenvalue
@@ -51,6 +56,22 @@ plt.show()
 # N = 10
 N = 10
 G = nx.Graph(create_circular_edgelist(N, I))
+# new_arr = nx.laplacian_matrix(G).toarray()
+# print(new_arr)
+# for n in range(1, N):
+#     if new_arr[0, n] == 0:
+#         # print(f"Edge (0, {n}) does not exist")
+#         new_arr[n, 0] = -1
+#         new_arr[0, n] = -1
+        
+#         new_arr[0, 0] += 1
+#         new_arr[n, n] += 1
+#         print(np.array2string(np.sort(np.linalg.eigvals(new_arr)), precision=4, suppress_small=True))
+#         new_arr[0, 0] -= 1
+#         new_arr[n, n] -= 1
+#         new_arr[n, 0] = 0
+#         new_arr[0, n] = 0
+# # new_arr[0, 2] = -1
 
 fielder_eigenvalues = [None for n in range(1, N)]
 
@@ -79,14 +100,52 @@ plt.autoscale(False, axis = 'y')
 plt.show()
 
 # Problem 3
+print("\nProblem 3")
+print("====================================================")
 karate_graph = nx.karate_club_graph()
+pos = nx.circular_layout(karate_graph)
 
+def spectral_clustering(G: nx.Graph, K: int, normalized = False):
+    L = nx.normalized_laplacian_matrix(G).toarray() if normalized else nx.laplacian_matrix(G).toarray()
+    
+    # Using eigh because L is supposed to be symmetric
+    eigvals, eigvecs = np.linalg.eigh(L)
 
-# Problem 4
+    # We will be using K-means on rows of K_least_vectors
+    K_least_vectors = eigvecs[:, :K]
+    
+    K_means = KMeans(n_clusters = K)
+    K_means.fit(K_least_vectors)
+    labels = K_means.predict(K_least_vectors)
+    
+    return labels
+
+# part a) K = 2
+K = 2    
+labels = spectral_clustering(karate_graph, K)
+
+fig = plt.figure()
+nx.draw(karate_graph, pos, node_color = labels)
+nx.draw_networkx_labels(karate_graph, pos)
+plt.show()
+
+# part b) K = 3
+K = 3
+labels = spectral_clustering(karate_graph, K)
+fig = plt.figure()
+nx.draw(karate_graph, pos, node_color = labels)
+nx.draw_networkx_labels(karate_graph, pos)
+plt.show()
+
+# Problem 4 
+print("\nProblem 4")
+print("====================================================")
+
 # Gets data for All Books and Books 1-7
 graph_data = listdir('./data')
 graph_data.remove('characters.csv')
 
+# Names to be used in dict and plots
 graph_names = ["All Books"] + [f"Book {n}" for n in range(1,8)]
 
 # Creating dict to store graphs in
@@ -119,5 +178,23 @@ for name,data in zip(graph_names,graph_data):
 print(book_graph_stats)
 
 # Problem 5
+print("\nProblem 5")
+print("====================================================")
+
+degree_centrality = {}
+weighted_degree_centrality = {}
+closeness_centrality = {}
+betweeness_centrality = {}
+eigenvector_centrality = {}
+pagerank = {}
+for name,G in book_graphs.items():
+
+    degree_centrality[name] = dict(G.degree())
+    weighted_degree_centrality[name] = dict(G.degree(weight = "weight"))
+    pagerank[name] = dict(nx.pagerank(G))
+
+degree_centrality = pd.DataFrame(degree_centrality)
+weighted_degree_centrality = pd.DataFrame(weighted_degree_centrality)
+pagerank = pd.DataFrame(pagerank)
 
 # Problem 6
