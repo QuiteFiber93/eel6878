@@ -187,28 +187,44 @@ betweeness_centrality = pd.DataFrame(betweeness_centrality)
 pagerank = pd.DataFrame(pagerank)
 
 # Problem 6
+print("\nProblem 6")
+print("====================================================")
 
 G = book_graphs['All Books']
 
-# Getting node positions
+# Getting Communities
 communities = nx.community.louvain_communities(G, weight='weight')
 
+plt.figure()
+colors = plt.cm.tab20.colors  # Get a list of colors from a colormap
 
-# TODO: Find a way to convert communities to labels
+supergraph = nx.cycle_graph(len(communities))
+supergraph_pos = nx.spring_layout(supergraph, scale = 4)
 
-# Getting node sizes
-node_size = 10000*pagerank.loc[list(G.nodes()), 'All Books']
-
-# positions of nodes
-pos = nx.spring_layout(G, weight = 'weight')
-
-# Label sizes
-label_size = betweeness_centrality.loc[list(G.nodes()), 'All Books']
-
-fig = plt.figure()
-nx.draw_networkx_nodes(G, pos)
-nx.draw_networkx_labels(G, pos)
-plt.axes()
-# plt.show()
-
-
+centers = list(supergraph_pos.values())
+# 2. Loop through each community
+for i, community in enumerate(communities):
+    
+    # Creates a subgraph for each community
+    subgraph = nx.subgraph(G, community)
+    
+    # Positions of nodes in each subgraph
+    pos = nx.spring_layout(subgraph, center = centers[i])
+    
+    # Edges contained entirely within community
+    intracommunity_edgelist = [edge for edge in subgraph.edges()]
+    
+    # Edges that lead out of community
+    intercommunity_edgelist = [edge for edge in G.edges() if edge not in subgraph.edges()]
+    
+    # Drawing nodes in community with specified color
+    node_size = [10000*pagerank.loc[node, 'All Books'] + 10 for node in community]
+    nx.draw_networkx_nodes(G, pos = pos, nodelist=community, node_color = colors[i], node_size = node_size)
+    
+    # Drawing edges that connect nodes within community
+    nx.draw_networkx_edges(subgraph, pos = pos, edgelist=intracommunity_edgelist, edge_color = colors[i], alpha = 0.3)
+    
+    
+plt.title("Harry Potter Series Character Interactions")
+plt.axis('off')
+plt.show()
