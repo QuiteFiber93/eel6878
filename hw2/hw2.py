@@ -56,6 +56,22 @@ plt.show()
 # N = 10
 N = 10
 G = nx.Graph(create_circular_edgelist(N, I))
+# new_arr = nx.laplacian_matrix(G).toarray()
+# print(new_arr)
+# for n in range(1, N):
+#     if new_arr[0, n] == 0:
+#         # print(f"Edge (0, {n}) does not exist")
+#         new_arr[n, 0] = -1
+#         new_arr[0, n] = -1
+        
+#         new_arr[0, 0] += 1
+#         new_arr[n, n] += 1
+#         print(np.array2string(np.sort(np.linalg.eigvals(new_arr)), precision=4, suppress_small=True))
+#         new_arr[0, 0] -= 1
+#         new_arr[n, n] -= 1
+#         new_arr[n, 0] = 0
+#         new_arr[0, n] = 0
+# # new_arr[0, 2] = -1
 
 fielder_eigenvalues = [None for n in range(1, N)]
 
@@ -107,6 +123,7 @@ def spectral_clustering(G: nx.Graph, K: int, normalized = False):
 # part a) K = 2
 K = 2    
 labels = spectral_clustering(karate_graph, K)
+
 fig = plt.figure()
 nx.draw(karate_graph, pos, node_color = labels)
 nx.draw_networkx_labels(karate_graph, pos)
@@ -124,107 +141,30 @@ plt.show()
 print("\nProblem 4")
 print("====================================================")
 
-# Gets data for All Books and Books 1-7
-graph_data = listdir('./data')
-graph_data.remove('characters.csv')
+chars = pd.read_csv("HW2_2026_Harry_Potter_Graphs/characters.csv")
+edges = pd.read_csv("HW2_2026_Harry_Potter_Graphs/relations.csv")
 
-# Names to be used in dict and plots
-graph_names = ["All Books"] + [f"Book {n}" for n in range(1,8)]
+G = nx.Graph()
+for _, row in edges.iterrows():
+    G.add_edge(row['source'], row['edge'], weight = 'weight', type = row['type'])
 
-# Creating dict to store graphs in
-book_graphs = {name : None for name in graph_names}
+node_count = G.number_of_nodes()
+edge_count = G.number_of_edges()
+average_degree = 2 * edge_count / node_count
+density = nx.density(G)
+is_connected = nx.is_connected(G)
+connected_components = nx.number_connected_components(G)
+print(f"Node Count: {node_count}")
+print(f"Edge Count: {edge_count}")
+print(f"Average Degree: {average_degree}")
+print(f"Density = {density}")
+print(f"Is Graph Connected: {is_connected}")
+print(f"Connected Components: {connected_components}")
 
-# dataframe to hold all statistics
-book_graph_stats = pd.DataFrame(columns = graph_names, index = ['Node Count', 'Edge Count', 'Average Degree', 'Density', 'Connected', 'Connected Components'])
 
-for name,data in zip(graph_names,graph_data):
-    # Will use nx function to convert from pandas DF to edgelist
-    # First reading csv to pandas dataframe
-    book_graph_data = pd.read_csv("./data/" + data)
-    
-    # Now converting pandas dataframe to graph through edgelist
-    # Graph is stored in dict where keys are book number and values are graph
-    book_graphs[name] = nx.from_pandas_edgelist(book_graph_data, 'source', 'target', 'weight')
-
-    # Statistics of graph
-    node_count = book_graphs[name].number_of_nodes()
-    edge_count = book_graphs[name].number_of_edges()
-    average_degree = 2 * edge_count / node_count
-    density = nx.density(book_graphs[name])
-    is_connected = nx.is_connected(book_graphs[name])
-    connected_components = nx.number_connected_components(book_graphs[name])
-    
-    # Inserting statistics into dataframe
-    book_graph_stats[name] = [node_count, edge_count, average_degree, density, is_connected, connected_components]
-    
-
-print(book_graph_stats)
+print(f"Total Ally Edges: ")
+print(f"Total Enemy Edges: ")
 
 # Problem 5
 print("\nProblem 5")
 print("====================================================")
-
-degree_centrality = {}
-weighted_degree_centrality = {}
-closeness_centrality = {}
-betweeness_centrality = {}
-eigenvector_centrality = {}
-pagerank = {}
-for name,G in book_graphs.items():
-
-    degree_centrality[name] = dict(G.degree())
-    weighted_degree_centrality[name] = dict(G.degree(weight = "weight"))
-    eigenvector_centrality[name] = dict(nx.eigenvector_centrality(G))
-    closeness_centrality[name] = dict(nx.closeness_centrality(G))
-    betweeness_centrality[name] = dict(nx.betweenness_centrality(G))
-    pagerank[name] = dict(nx.pagerank(G, weight='weight'))
-
-degree_centrality = pd.DataFrame(degree_centrality)
-weighted_degree_centrality = pd.DataFrame(weighted_degree_centrality)
-eigenvector_centrality = pd.DataFrame(eigenvector_centrality)
-closeness_centrality = pd.DataFrame(closeness_centrality)
-betweeness_centrality = pd.DataFrame(betweeness_centrality)
-pagerank = pd.DataFrame(pagerank)
-
-# Problem 6
-print("\nProblem 6")
-print("====================================================")
-
-G = book_graphs['All Books']
-
-# Getting Communities
-communities = nx.community.louvain_communities(G, weight='weight')
-
-plt.figure()
-colors = plt.cm.tab20.colors  # Get a list of colors from a colormap
-
-supergraph = nx.cycle_graph(len(communities))
-supergraph_pos = nx.spring_layout(supergraph, scale = 4)
-
-centers = list(supergraph_pos.values())
-# 2. Loop through each community
-for i, community in enumerate(communities):
-    
-    # Creates a subgraph for each community
-    subgraph = nx.subgraph(G, community)
-    
-    # Positions of nodes in each subgraph
-    pos = nx.spring_layout(subgraph, center = centers[i])
-    
-    # Edges contained entirely within community
-    intracommunity_edgelist = [edge for edge in subgraph.edges()]
-    
-    # Edges that lead out of community
-    intercommunity_edgelist = [edge for edge in G.edges() if edge not in subgraph.edges()]
-    
-    # Drawing nodes in community with specified color
-    node_size = [10000*pagerank.loc[node, 'All Books'] + 10 for node in community]
-    nx.draw_networkx_nodes(G, pos = pos, nodelist=community, node_color = colors[i], node_size = node_size)
-    
-    # Drawing edges that connect nodes within community
-    nx.draw_networkx_edges(subgraph, pos = pos, edgelist=intracommunity_edgelist, edge_color = colors[i], alpha = 0.3)
-    
-    
-plt.title("Harry Potter Series Character Interactions")
-plt.axis('off')
-plt.show()

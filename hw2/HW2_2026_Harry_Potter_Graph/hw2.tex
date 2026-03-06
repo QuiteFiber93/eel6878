@@ -52,7 +52,7 @@
 \begin{questions}
 
 %%------------------------------------------------------------
-%% Q1 — 15 pts  (HW3 Q1: Algebra of Graphs)
+%% Q1 — 15 pts
 %%------------------------------------------------------------
 \question[15]{\bf Algebra of Graphs}
 
@@ -68,7 +68,7 @@ Considering the undirected graph in the figure:
 \end{parts}
 
 %%------------------------------------------------------------
-%% Q2 — 25 pts  (HW3 Q2: Circular Symmetry)
+%% Q2 — 25 pts
 %%------------------------------------------------------------
 \question[25]{\bf Graphs with Circular Symmetry}
 
@@ -101,7 +101,7 @@ For example, suppose $\mathcal{I}=\{1,2\}$ and $N>4$, then:
 \end{parts}
 
 %%------------------------------------------------------------
-%% Q3 — 10 pts  (HW3 Q3: Zachary Karate Club)
+%% Q3 — 10 pts
 %%------------------------------------------------------------
 \question[10]{\bf Spectral Clustering on the Karate Club Graph}~{\it (Python/NetworkX)}
 
@@ -117,32 +117,53 @@ For each case, plot the graph with nodes colored by community assignment and bri
 discuss the quality of the partition.
 
 %%------------------------------------------------------------
-%% Q4 — 10 pts  (HW4 Q1: Data Preparation)
+%% Q4 — 10 pts
 %%------------------------------------------------------------
 \question[10]{\bf Harry Potter Network --- Data Preparation and Overview}%
 ~{\it (Python/NetworkX)}
 
 This question and the two that follow apply network analysis to the Harry Potter
-series~\cite{hp-network}. The dataset comprises eight undirected graphs: one for each
-of the seven books and one for the entire series. Interactions are identified based on
-co-mentions within close proximity in the text, signifying
-direct\footnote{Not to be confused with a directed edge.} interactions between
-characters.
+series. The dataset is a signed undirected graph covering the entire series,
+available at \url{https://github.com/efekarakus/potter-network} and included in
+the homework zip file. It contains two files:
+\begin{itemize}
+  \item \texttt{characters.csv} --- a list of 65 Harry Potter characters with
+        biographical information.
+  \item \texttt{relations.csv} --- a list of undirected relations between characters,
+        where the \texttt{type} field indicates allies (\texttt{+}) or
+        enemies (\texttt{-}).
+\end{itemize}
+Interactions are identified based on co-mentions within close proximity in the
+text, signifying direct\footnote{Not to be confused with a directed edge.}
+interactions between characters. Load the data as follows:
+\begin{lstlisting}[language=Python]
+import pandas as pd
+import networkx as nx
+
+chars = pd.read_csv("characters.csv")
+edges = pd.read_csv("relations.csv")
+
+G = nx.Graph()
+for _, row in edges.iterrows():
+    G.add_edge(row["source"], row["target"], type=row["type"])
+\end{lstlisting}
 
 \begin{parts}
-  \part Load the overall graph and all seven individual book graphs.
-  \part Provide a statistical summary for each graph, including: number of nodes,
+  \part Load the overall series graph from \texttt{characters.csv} and
+        \texttt{relations.csv} as described above.
+  \part Provide a statistical summary of the graph, including: number of nodes,
         number of edges, average degree, density, and connectivity status.
+        Also report the number of positive (ally) and negative (enemy) edges.
 \end{parts}
 
 %%------------------------------------------------------------
-%% Q5 — 25 pts  (HW4 Q2: Centrality Analysis)
+%% Q5 — 25 pts
 %%------------------------------------------------------------
 \question[25]{\bf Harry Potter Network --- Centrality Analysis}~{\it (Python/NetworkX)}
 
 \begin{parts}
-  \part For the interaction network of each book, compute the following centrality
-        metrics for all characters:
+  \part Compute the following centrality metrics for all characters in the
+        overall series graph:
         \begin{itemize}
           \item Degree Centrality
           \item Weighted Degree Centrality
@@ -151,20 +172,19 @@ characters.
           \item Eigenvector Centrality
           \item PageRank
         \end{itemize}
-  \part Identify the top 10 characters based on each centrality measure for every book.
-        \textbf{Visualize and discuss} the evolution of these characters' centrality
-        across the series, emphasizing how their roles and narrative significance
-        develop within each book.
-  \part Examine the trends in centrality measures across the series, noting any
-        significant increases or decreases. Relate these trends to the characters'
-        narrative arcs, particularly during their introduction, peak involvement, and
-        eventual departure from the storyline. Highlight \textbf{at least one character}
-        whose centrality measures closely align with their narrative arc and provide a
-        detailed analysis of this correlation.
+  \part Identify the top 10 characters based on each centrality measure.
+        \textbf{Visualize and discuss} the results, emphasizing how each metric
+        reflects different aspects of a character's role and narrative significance
+        in the series.
+  \part Highlight \textbf{at least one character} whose centrality measures
+        closely align with their narrative arc and provide a detailed analysis
+        of this correlation. For example, consider how a character's degree of
+        connectivity or brokerage role reflects their introduction, peak
+        involvement, or departure from the storyline.
 \end{parts}
 
 %%------------------------------------------------------------
-%% Q6 — 15 pts  (HW4 Q3: Community Detection)
+%% Q6 — 15 pts
 %%------------------------------------------------------------
 \question[15]{\bf Harry Potter Network --- Community Detection}~{\it (Python/NetworkX)}
 
@@ -182,7 +202,7 @@ characters.
   \part Analyze the composition and configuration of the detected communities. Discuss
         the narrative significance of these groupings (e.g., characters from the same
         Hogwarts house clustering together, or alliances formed during key plot events).
-        Examine how these community structures reflect the evolving social dynamics and
+        Examine how these community structures reflect the social dynamics and
         relationships throughout the series.
 \end{parts}
 
