@@ -1,0 +1,276 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{bm}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{url}
+
+\definecolor{deepblue}{RGB}{0,50,120}
+\definecolor{accentblue}{RGB}{30,100,200}
+\definecolor{darkgray}{RGB}{80,80,80}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=accentblue,
+    urlcolor=accentblue
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{deepblue}{\small EEL 6878 --- Spring 2026}}
+\lhead{\textcolor{deepblue}{\small Instructor: Tong Wu}}
+\rfoot{\thepage}
+
+\titleformat{\section}[block]{\large\bfseries\color{deepblue}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{accentblue}}{}{0em}{}
+
+% Custom question counter
+\newcounter{questioncounter}
+\newcommand{\question}[1]{%
+  \stepcounter{questioncounter}%
+  \vspace{1em}%
+  \noindent\textbf{\textcolor{deepblue}{\large Question \thequestioncounter.} #1}%
+  \vspace{0.3em}%
+}
+
+\begin{document}
+
+%% ============================================================
+%%  TITLE PAGE / HEADER
+%% ============================================================
+\begin{center}
+  {\Large \textbf{EEL 6878: Modeling and Artificial Intelligence}}\\[0.3em]
+  {\large Spring 2026}\\[0.2em]
+  {\small \textcolor{darkgray}{Instructor: Tong Wu}}\\[1em]
+  \rule{\linewidth}{0.8pt}\\[0.4em]
+  {\LARGE \textbf{\textcolor{deepblue}{Course Assignments}}}\\[0.3em]
+  \rule{\linewidth}{0.8pt}
+\end{center}
+
+\vspace{1em}
+
+\tableofcontents
+
+\newpage
+
+%% ============================================================
+%%  PART 1: MIDTERM 1
+%% ============================================================
+\section{Midterm 1 --- Questions}
+
+\setcounter{questioncounter}{0}
+
+\question{\textbf{Question 1}}\\[0.3em]
+You are tasked with simulating network dynamics for the Wikispeedia graph, as detailed in the dataset from the human-computation game \href{https://dlab.epfl.ch/wikispeedia/play/}{Wikispeedia}, which involves human navigation paths on Wikipedia. Players are asked to navigate from a given source article to a target article by only clicking on Wikipedia links, within a condensed version of Wikipedia consisting of 4,589 articles.
+
+\begin{enumerate}[leftmargin=1.5em]
+\item Ingest the graph as a \textbf{directed graph} and perform the following tasks:
+    \begin{itemize}[leftmargin=1.5em]
+        \item Evaluate the HITS centrality for this graph.
+        \item Discuss its significance and how it differentiates from other centrality measures.
+        \item Identify the node with the highest hub value and the node with the highest authority value.
+    \end{itemize}
+\item Given that the graph is not strongly connected, a uniform random walk will not have a stationary distribution. The probability of visiting a node asymptotically depends on the initial state probabilities $\bm{\pi}(0)$. The \textbf{PageRank} of webpages is calculated using a modified uniform random walk, with each webpage's initial state probability set to $1/N$. The transition probability is defined as follows:
+\begin{align*}
+  w_{ij} &= \text{Probability of going from node $i$ to node $j$}\\
+  &= \begin{cases}
+  \dfrac{1}{N},  & \mathcal{N}^{\mathrm{out}}_i = \emptyset\\[0.5em]
+  \dfrac{\alpha}{N} + \dfrac{1-\alpha}{|\mathcal{N}^{\mathrm{out}}_i|}, & \mathcal{N}^{\mathrm{out}}_i \ne \emptyset,\ (i \rightarrow j) \in \mathcal{E}\\[0.5em]
+  \dfrac{\alpha}{N}, & \mathcal{N}^{\mathrm{out}}_i \ne \emptyset,\ (i \rightarrow j) \notin \mathcal{E},
+  \end{cases}
+\end{align*}
+where $\alpha$ is a small value less than 1 (typically about $0.1$), $N$ is the number of nodes in the graph, and $\mathcal{N}_i^{\mathrm{out}}$ is the set of out-neighbors of node $i$. Thus, the state probabilities evolve as:
+\begin{align*}
+  \bm{\pi}(t+1) = \bm{W}^T\bm{\pi}(t) = \frac{1}{N}\left(\bm{W}^T\right)^t\bm{1}
+\end{align*}
+The PageRank is the limit $\bm{\pi}^\star = \lim_{t\to\infty}\bm{\pi}(t)$, i.e., the left eigenvector of $\bm{W}$ corresponding to eigenvalue 1:
+\[
+  {\bm{\pi}^\star}^T = {\bm{\pi}^\star}^T \bm{W}.
+\]
+
+\noindent Calculate the PageRank for the Wikispeedia network using this fact, and compare it to the PageRank obtained using \texttt{nx.pagerank}, by plotting them on a scatter plot.
+\end{enumerate}
+
+\vspace{1em}
+
+\question{\textbf{Questions (Randomized Gossiping)}}
+
+\begin{enumerate}[leftmargin=1.5em]
+\item Generate a \textbf{connected} Random Geometric Graph with $N=100$ nodes.\footnote{\textit{Hint: Use \texttt{G = nx.random\_geometric\_graph(N, radius, seed)}. You may select any combination of radius and random seed to produce the graph.}}
+
+\item Each node in the graph observes an instantiation of $\mathrm{Bernoulli}(p)$, where $p$ is unknown to the nodes. The Randomized Gossiping algorithm allows the nodes to cooperatively estimate $p$. Do the following:
+\begin{itemize}[leftmargin=1.5em]
+  \item Select $p=0.2$, draw i.i.d.\ samples from $\mathrm{Bernoulli}(p=0.2)$ and assign these as the initial state $x_i(0)$ for all $i \in \{1, 2, \ldots, N\}$.
+  \item Simulate the randomized ``Gossiping'' protocol over this graph for $T = 10{,}000$ steps to estimate $p$. At each time $t$, a random edge $(i_t, j_t)$ is selected and the states of the involved nodes are averaged:
+\[
+[\bm{x}(t+1)]_v =
+\begin{cases}
+\dfrac{x_{i_t}(t)+x_{j_t}(t)}{2} & i_t=v\ \text{or}\ j_t=v\\[0.5em]
+x_v(t) & \text{otherwise}
+\end{cases}
+\]
+  \item Display the evolution of the states of all nodes over time.
+  \item Discuss why this method can effectively estimate $p$.
+\end{itemize}
+
+\item (\textbf{Bonus}) Calculate analytically the expected transition matrix $\overline{\bm{W}} = \mathbb{E}[\bm{W}(t)]$ based on the statistics of the exchange.
+
+\item (\textbf{Bonus}) Determine $\lambda_2(\overline{\bm{W}})$ and discuss its significance in the context of the gossiping algorithm.
+\end{enumerate}
+
+\newpage
+
+%% ============================================================
+%%  PART 2: FINAL PROJECT PLANNING
+%% ============================================================
+\section{Final Project Planning}
+
+\subsection*{Overview}
+
+The final project is a short, collaborative mini-project focusing on applying \textbf{modern AI techniques} to problems involving graph-structured data. The goal is to combine graph modeling with state-of-the-art AI-driven analysis, with an emphasis on deep learning, transformer-based, and generative approaches.
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Team Composition:} Each project team will consist of 2 students.
+  \item \textbf{Project Scope:} The project is designed to be completed within approximately one week.
+  \item \textbf{Network Focus:} Teams must select a networked system and construct a graph representation of the data.
+  \item \textbf{Project Goal:} Teams must define a clear problem addressable using modern AI methods on graphs.
+  \item \textbf{Analytical Approach:} Teams must propose an approach combining graph-based modeling with AI techniques (e.g., Graph Transformers, GNNs, diffusion models, or LLM-based methods).
+\end{itemize}
+
+\vspace{0.5em}
+
+\noindent\textbf{Important Note on Data:}
+
+A critical component is identifying and obtaining a suitable dataset. Students are expected to independently search for or construct datasets. Possible strategies include:
+\begin{itemize}[leftmargin=1.5em]
+    \item Searching public data repositories (e.g., PyG datasets, OGB, Hugging Face, SNAP)
+    \item Extracting or sub-sampling from larger datasets
+    \item Constructing synthetic or simulated network data
+\end{itemize}
+If a suitable dataset cannot be identified within a reasonable amount of time, students are encouraged to simplify the problem or generate their own data.
+
+\subsection*{Suggested Project Topics (AI-Focused)}
+
+The following topics reflect a \textbf{modern, AI-centric} perspective on graph analysis. Students are strongly encouraged to explore their own ideas, especially those connected to their research or professional interests.
+
+\begin{enumerate}[leftmargin=1.5em, label=\textbf{\arabic*.}]
+
+\item \textbf{Graph Transformer for Node Classification}\\
+Apply a Graph Transformer architecture (e.g., Graphormer, TokenGT, or GPS) to a benchmark citation or social network (e.g., Cora, Citeseer, ogbn-arxiv). Compare performance against classical GCN/GAT baselines and analyze the role of global attention on graph-structured data.
+
+\item \textbf{Transformer-Based Link Prediction}\\
+Frame link prediction as a sequence modeling problem. Encode node neighborhood walks as token sequences and apply a Transformer encoder to predict missing edges. Explore how positional encodings can represent graph topology.
+
+\item \textbf{Knowledge Graph Completion with LLMs}\\
+Use a knowledge graph dataset (e.g., FB15k-237, WN18RR) and combine classical KG embeddings (TransE, RotatE) with LLM-generated textual representations for improved triple completion and reasoning.
+
+\item \textbf{LLM-Augmented Graph Reasoning}\\
+Given a structured graph (e.g., a small knowledge graph, scene graph, or code dependency graph), design prompts that describe graph topology and evaluate an LLM's ability to perform graph reasoning tasks such as path finding, subgraph identification, or relation inference.
+
+\item \textbf{Score-Based Diffusion Model on Graphs}\\
+Apply a diffusion-based generative model (e.g., DDPM-style adapted for graphs, or GDSS) to generate new graph structures or node feature distributions. Use molecular graphs (QM9) or synthetic data as a testbed.
+
+\item \textbf{Mini-LLM Pre-Training on Graph Text Descriptions}\\
+Build and pre-train a small Transformer language model on textual descriptions of graph nodes and edges (e.g., derived from a knowledge graph or Wikipedia graph). Evaluate the model on downstream graph understanding tasks and analyze what structural knowledge is captured.
+
+\item \textbf{Spatial-Temporal Graph Transformer for Traffic Forecasting}\\
+Apply an attention-based spatial-temporal graph model to a traffic dataset (e.g., METR-LA, PeMS-BAY). Evaluate how graph attention captures spatial dependencies between road sensors over time.
+
+\item \textbf{Graph Transformer Attention for Anomaly Detection}\\
+Train a Graph Transformer on a fraud or network intrusion dataset and use the attention weight distributions as interpretable anomaly signals. Analyze whether anomalous nodes receive distinct attention patterns.
+
+\item \textbf{Retrieval-Augmented Generation (RAG) over a Knowledge Graph}\\
+Build a small RAG pipeline where retrieved context is sourced via knowledge graph traversal rather than dense vector retrieval. Compare KG-guided RAG against standard vector-based RAG on a QA benchmark.
+
+\item \textbf{Graph Diffusion + GNN for Community Detection}\\
+Use a learned or analytical diffusion process (e.g., heat kernel, personalized PageRank, or a trained graph diffusion operator) to propagate node signals across a network, then layer a GNN or Graph Transformer on top for community classification or embedding.
+
+\end{enumerate}
+
+\vspace{0.5em}
+
+\noindent\textbf{Open Topic Policy:}
+
+Projects are not restricted to the topics above. Students are encouraged to propose their own ideas, particularly those that:
+\begin{itemize}[leftmargin=1.5em]
+    \item Relate to their ongoing research or professional work
+    \item Involve modeling of complex systems using graphs
+    \item Incorporate modern AI techniques (Graph Transformers, GNNs, diffusion models, LLMs)
+\end{itemize}
+Novel and well-motivated project ideas are highly encouraged.
+
+\vspace{0.5em}
+
+\noindent\textbf{Project Scope Guidelines:}
+
+To ensure feasibility within the one-week timeline:
+\begin{itemize}[leftmargin=1.5em]
+    \item Use datasets of manageable size (e.g., up to $\sim\!10^5$ nodes)
+    \item Clearly define how the graph is constructed (nodes and edges must be explicitly specified)
+    \item Focus on insight and methodology rather than scale or complexity
+    \item Simplifications (e.g., sub-sampling or synthetic data) are encouraged when appropriate
+\end{itemize}
+
+\subsection*{Project Planning Questions}
+
+To prepare for the final project, please address the following\footnote{This initial plan is subject to refinement and changes as the course progresses, and further guidance will be provided.}:
+
+\begin{enumerate}[leftmargin=1.5em, label=\textbf{\arabic*.}]
+
+\item \textbf{Team Identification}\\
+List the members of your team.
+
+\item \textbf{Task Distribution Plan}\\
+Describe how the workload will be divided between team members.
+
+\item \textbf{Project Proposal:}
+\begin{itemize}[leftmargin=1.5em]
+
+\item \textbf{Problem Description}\\
+Clearly define the problem you aim to solve using AI and graph-based methods.
+
+\item \textbf{Graph Modeling}\\
+Describe how your data will be represented as a graph:
+\begin{itemize}[leftmargin=1.5em]
+    \item What are the nodes?
+    \item What are the edges?
+\end{itemize}
+
+\item \textbf{Data Plan}\\
+Explain how you will obtain or generate your dataset:
+\begin{itemize}[leftmargin=1.5em]
+    \item Where will the data come from?
+    \item What type of data do you need?
+    \item What preprocessing or graph construction steps are required?
+\end{itemize}
+
+\item \textbf{Methodology}\\
+Outline the AI methods you plan to use (e.g., Graph Transformers, GNNs, diffusion models, LLMs, or hybrid approaches).
+
+\item \textbf{Expected Outcome}\\
+What results or insights do you expect to obtain?
+
+\end{itemize}
+\end{enumerate}
+
+\vspace{0.5em}
+\noindent Later in the course, teams will implement their proposed methods and analyze their graph data using techniques covered in class.
+
+%% ============================================================
+%%  BIBLIOGRAPHY
+%% ============================================================
+\newpage
+\begin{thebibliography}{9}
+\bibitem{wikispeedia}
+R.~West and J.~Leskovec,
+``Human Wayfinding in Information Networks,''
+in \textit{Proc. 21st International World Wide Web Conference (WWW)}, 2012.
+\end{thebibliography}
+
+\end{document}
