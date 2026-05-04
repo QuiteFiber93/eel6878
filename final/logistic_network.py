@@ -120,7 +120,7 @@ for i, r in enumerate(connected_pairs, 1):
 
 # Writing truth solutinos to file
 
-with open("route_benchmark.json", "w") as f:
+with open("ground_truth.json", "w") as f:
     json.dump(results, f, indent=2)
 
 delimeter('SUMMARY')
