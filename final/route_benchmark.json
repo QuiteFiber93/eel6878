@@ -1,0 +1,589 @@
+[
+  {
+    "source": "DAL",
+    "target": "CLT",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "CHI",
+    "target": "ATL",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "CHI",
+        "YYZ",
+        "NYC",
+        "ATL"
+      ],
+      "total_days": 7,
+      "total_cost": 2800
+    },
+    "cheapest": {
+      "path": [
+        "CHI",
+        "YYZ",
+        "NYC",
+        "ATL"
+      ],
+      "total_days": 7,
+      "total_cost": 2800
+    }
+  },
+  {
+    "source": "DTW",
+    "target": "OAK",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "DTW",
+        "CHI",
+        "DEN",
+        "SLC",
+        "OAK"
+      ],
+      "total_days": 6,
+      "total_cost": 3800
+    },
+    "cheapest": {
+      "path": [
+        "DTW",
+        "CHI",
+        "DAL",
+        "PHX",
+        "LAX",
+        "OAK"
+      ],
+      "total_days": 12,
+      "total_cost": 2550
+    }
+  },
+  {
+    "source": "PHL",
+    "target": "DTW",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "BOS",
+    "target": "MEM",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "BOS",
+        "PHL",
+        "ATL",
+        "MEM"
+      ],
+      "total_days": 4,
+      "total_cost": 1850
+    },
+    "cheapest": {
+      "path": [
+        "BOS",
+        "PHL",
+        "ATL",
+        "MEM"
+      ],
+      "total_days": 4,
+      "total_cost": 1850
+    }
+  },
+  {
+    "source": "HOU",
+    "target": "ANC",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "HOU",
+        "PHX",
+        "LAX",
+        "SEA",
+        "ANC"
+      ],
+      "total_days": 9,
+      "total_cost": 4650
+    },
+    "cheapest": {
+      "path": [
+        "HOU",
+        "LAX",
+        "SEA",
+        "ANC"
+      ],
+      "total_days": 13,
+      "total_cost": 3900
+    }
+  },
+  {
+    "source": "DAL",
+    "target": "BOS",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "ANC",
+    "target": "DEN",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "MIA",
+    "target": "OAK",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "MIA",
+        "ATL",
+        "MEM",
+        "KC",
+        "DEN",
+        "SLC",
+        "OAK"
+      ],
+      "total_days": 8,
+      "total_cost": 5900
+    },
+    "cheapest": {
+      "path": [
+        "MIA",
+        "ATL",
+        "HOU",
+        "LAX",
+        "OAK"
+      ],
+      "total_days": 13,
+      "total_cost": 3250
+    }
+  },
+  {
+    "source": "OAK",
+    "target": "NYC",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "CHI",
+    "target": "BOS",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "CHI",
+    "target": "LAX",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "CHI",
+        "DEN",
+        "LAX"
+      ],
+      "total_days": 5,
+      "total_cost": 2900
+    },
+    "cheapest": {
+      "path": [
+        "CHI",
+        "DAL",
+        "PHX",
+        "LAX"
+      ],
+      "total_days": 10,
+      "total_cost": 1700
+    }
+  },
+  {
+    "source": "MIA",
+    "target": "HNL",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "MIA",
+        "ATL",
+        "HOU",
+        "PHX",
+        "LAX",
+        "HNL"
+      ],
+      "total_days": 15,
+      "total_cost": 4750
+    },
+    "cheapest": {
+      "path": [
+        "MIA",
+        "ATL",
+        "HOU",
+        "LAX",
+        "HNL"
+      ],
+      "total_days": 19,
+      "total_cost": 4000
+    }
+  },
+  {
+    "source": "BOS",
+    "target": "LAX",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "BOS",
+        "NYC",
+        "CHI",
+        "DEN",
+        "LAX"
+      ],
+      "total_days": 8,
+      "total_cost": 4300
+    },
+    "cheapest": {
+      "path": [
+        "BOS",
+        "NYC",
+        "CHI",
+        "DAL",
+        "PHX",
+        "LAX"
+      ],
+      "total_days": 13,
+      "total_cost": 3100
+    }
+  },
+  {
+    "source": "BOS",
+    "target": "ANC",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "BOS",
+        "NYC",
+        "CHI",
+        "MSP",
+        "SEA",
+        "ANC"
+      ],
+      "total_days": 9,
+      "total_cost": 5900
+    },
+    "cheapest": {
+      "path": [
+        "BOS",
+        "NYC",
+        "CHI",
+        "MSP",
+        "DEN",
+        "SLC",
+        "POR",
+        "SEA",
+        "ANC"
+      ],
+      "total_days": 18,
+      "total_cost": 5550
+    }
+  },
+  {
+    "source": "TPA",
+    "target": "MEM",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "TPA",
+        "MIA",
+        "ATL",
+        "MEM"
+      ],
+      "total_days": 4,
+      "total_cost": 1700
+    },
+    "cheapest": {
+      "path": [
+        "TPA",
+        "MIA",
+        "ATL",
+        "MEM"
+      ],
+      "total_days": 4,
+      "total_cost": 1700
+    }
+  },
+  {
+    "source": "CHI",
+    "target": "DAL",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "CHI",
+        "KC",
+        "DAL"
+      ],
+      "total_days": 3,
+      "total_cost": 1250
+    },
+    "cheapest": {
+      "path": [
+        "CHI",
+        "DAL"
+      ],
+      "total_days": 5,
+      "total_cost": 600
+    }
+  },
+  {
+    "source": "ANC",
+    "target": "YYZ",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "SEA",
+    "target": "MSP",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "POR",
+    "target": "YYZ",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "BOS",
+    "target": "PHL",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "BOS",
+        "PHL"
+      ],
+      "total_days": 1,
+      "total_cost": 450
+    },
+    "cheapest": {
+      "path": [
+        "BOS",
+        "PHL"
+      ],
+      "total_days": 1,
+      "total_cost": 450
+    }
+  },
+  {
+    "source": "CLT",
+    "target": "MIA",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "CLT",
+        "JAX",
+        "MIA"
+      ],
+      "total_days": 2,
+      "total_cost": 950
+    },
+    "cheapest": {
+      "path": [
+        "CLT",
+        "JAX",
+        "MIA"
+      ],
+      "total_days": 2,
+      "total_cost": 950
+    }
+  },
+  {
+    "source": "DTW",
+    "target": "TPA",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "DTW",
+        "CHI",
+        "YYZ",
+        "NYC",
+        "PHL",
+        "CLT",
+        "JAX",
+        "TPA"
+      ],
+      "total_days": 9,
+      "total_cost": 3700
+    },
+    "cheapest": {
+      "path": [
+        "DTW",
+        "CHI",
+        "YYZ",
+        "NYC",
+        "PHL",
+        "CLT",
+        "JAX",
+        "TPA"
+      ],
+      "total_days": 9,
+      "total_cost": 3700
+    }
+  },
+  {
+    "source": "NYC",
+    "target": "LAX",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "NYC",
+        "CHI",
+        "DEN",
+        "LAX"
+      ],
+      "total_days": 7,
+      "total_cost": 3900
+    },
+    "cheapest": {
+      "path": [
+        "NYC",
+        "CHI",
+        "DAL",
+        "PHX",
+        "LAX"
+      ],
+      "total_days": 12,
+      "total_cost": 2700
+    }
+  },
+  {
+    "source": "DEN",
+    "target": "JAX",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "KC",
+    "target": "MSP",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "DEN",
+    "target": "SLC",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "DEN",
+        "SLC"
+      ],
+      "total_days": 1,
+      "total_cost": 600
+    },
+    "cheapest": {
+      "path": [
+        "DEN",
+        "SLC"
+      ],
+      "total_days": 1,
+      "total_cost": 600
+    }
+  },
+  {
+    "source": "BOS",
+    "target": "DAL",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "BOS",
+        "PHL",
+        "ATL",
+        "DAL"
+      ],
+      "total_days": 5,
+      "total_cost": 2200
+    },
+    "cheapest": {
+      "path": [
+        "BOS",
+        "NYC",
+        "CHI",
+        "DAL"
+      ],
+      "total_days": 8,
+      "total_cost": 2000
+    }
+  },
+  {
+    "source": "KC",
+    "target": "SEA",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "KC",
+        "DEN",
+        "SEA"
+      ],
+      "total_days": 5,
+      "total_cost": 3100
+    },
+    "cheapest": {
+      "path": [
+        "KC",
+        "DEN",
+        "SLC",
+        "POR",
+        "SEA"
+      ],
+      "total_days": 8,
+      "total_cost": 2950
+    }
+  },
+  {
+    "source": "MIA",
+    "target": "ANC",
+    "connected": true,
+    "fastest": {
+      "path": [
+        "MIA",
+        "ATL",
+        "MEM",
+        "KC",
+        "DEN",
+        "SEA",
+        "ANC"
+      ],
+      "total_days": 13,
+      "total_cost": 7000
+    },
+    "cheapest": {
+      "path": [
+        "MIA",
+        "ATL",
+        "HOU",
+        "LAX",
+        "SEA",
+        "ANC"
+      ],
+      "total_days": 18,
+      "total_cost": 5900
+    }
+  },
+  {
+    "source": "SLC",
+    "target": "HOU",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  },
+  {
+    "source": "DAL",
+    "target": "MIA",
+    "connected": false,
+    "fastest": null,
+    "cheapest": null
+  }
+]
